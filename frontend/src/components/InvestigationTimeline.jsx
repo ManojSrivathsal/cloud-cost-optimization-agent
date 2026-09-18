@@ -1,6 +1,6 @@
 import React from 'react';
 
-function InvestigationTimeline({ investigation }) {
+function InvestigationTimeline({ investigation, simStage = 'completed', activeStepIndex = 999 }) {
   if (!investigation) {
     return (
       <div className="investigation-section empty-state">
@@ -17,6 +17,24 @@ function InvestigationTimeline({ investigation }) {
     final_decision,
     steps,
   } = investigation;
+
+  // Dynamically derive step status based on current simulation progress
+  const resolveStepStatus = (step, idx) => {
+    if (simStage === 'idle') {
+      return 'pending';
+    }
+    if (simStage === 'investigating') {
+      if (idx < activeStepIndex) {
+        return step.status;
+      }
+      if (idx === activeStepIndex) {
+        return 'in_progress';
+      }
+      return 'pending';
+    }
+    // For stages >= safety_checking, all investigation steps are done
+    return step.status;
+  };
 
   // Helper for status icon and class
   const getStatusMeta = (status) => {
@@ -92,7 +110,8 @@ function InvestigationTimeline({ investigation }) {
         <div className="timeline-track-line"></div>
 
         {steps.map((step, idx) => {
-          const statusMeta = getStatusMeta(step.status);
+          const currentStatus = resolveStepStatus(step, idx);
+          const statusMeta = getStatusMeta(currentStatus);
 
           return (
             <div key={step.step_id || idx} className={`timeline-item ${statusMeta.className}`}>

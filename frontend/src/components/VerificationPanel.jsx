@@ -1,6 +1,6 @@
 import React from 'react';
 
-function VerificationPanel({ verificationData }) {
+function VerificationPanel({ verificationData, simStage = 'completed' }) {
   if (!verificationData) return null;
 
   const {
@@ -13,6 +13,30 @@ function VerificationPanel({ verificationData }) {
     before_after,
     checks,
   } = verificationData;
+
+  const isAwaiting = simStage === 'idle' || simStage === 'investigating' || simStage === 'safety_checking' || simStage === 'action_dispatch';
+
+  if (isAwaiting) {
+    return (
+      <div className="verification-panel-card standby-mode">
+        <div className="card-header-row">
+          <div>
+            <div className="panel-eyebrow">POST-ACTION AUDIT</div>
+            <h3 className="card-title">State Verification</h3>
+          </div>
+          <span className="mono-pill">AUDIT: PENDING</span>
+        </div>
+
+        <div className="standby-mini-content">
+          <span className="standby-icon">🛡️</span>
+          <div className="standby-text">
+            <div className="standby-subhead">AWAITING CLUSTER EXECUTION</div>
+            <p>Post-action invariant verification and state delta audits will commence immediately after execution.</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   const isVerified = verdict_status === 'verified';
   const isRecovery = verdict_status === 'recovery_verified';

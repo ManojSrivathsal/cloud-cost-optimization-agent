@@ -1,6 +1,6 @@
 import React from 'react';
 
-function CostImpact({ costImpactData }) {
+function CostImpact({ costImpactData, simStage = 'completed' }) {
   if (!costImpactData) return null;
 
   const {
@@ -15,6 +15,30 @@ function CostImpact({ costImpactData }) {
     status_type,
     summary,
   } = costImpactData;
+
+  const isAwaiting = simStage !== 'completed';
+
+  if (isAwaiting) {
+    return (
+      <div className="cost-impact-container standby-mode">
+        <div className="section-header">
+          <div>
+            <div className="panel-eyebrow">FINANCIAL IMPACT & ROI</div>
+            <h2 className="section-title">Cost Impact Analysis</h2>
+          </div>
+          <span className="mono-pill">CALCULATION: STANDBY</span>
+        </div>
+
+        <div className="standby-mini-content">
+          <span className="standby-icon">💰</span>
+          <div className="standby-text">
+            <div className="standby-subhead">FINANCIAL ROI LOCKED UNTIL AUDIT COMPLETION</div>
+            <p>Net hourly burn reductions and verified monthly savings are finalized once post-action invariants pass.</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   const hasSavings = estimated_monthly_savings > 0;
 

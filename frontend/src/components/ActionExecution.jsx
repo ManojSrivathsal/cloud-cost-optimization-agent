@@ -1,6 +1,6 @@
 import React from 'react';
 
-function ActionExecution({ actionData }) {
+function ActionExecution({ actionData, simStage = 'completed' }) {
   if (!actionData) return null;
 
   const {
@@ -18,6 +18,30 @@ function ActionExecution({ actionData }) {
     rejection_reason,
     execution_duration_ms,
   } = actionData;
+
+  const isAwaiting = simStage === 'idle' || simStage === 'investigating' || simStage === 'safety_checking';
+
+  if (isAwaiting) {
+    return (
+      <div className="action-execution-card standby-mode">
+        <div className="card-header-row">
+          <div>
+            <div className="panel-eyebrow">INFRASTRUCTURE DISPATCH</div>
+            <h3 className="card-title">Action Execution</h3>
+          </div>
+          <span className="mono-pill">DISPATCH: QUEUED</span>
+        </div>
+
+        <div className="standby-mini-content">
+          <span className="standby-icon">⚙️</span>
+          <div className="standby-text">
+            <div className="standby-subhead">AWAITING SAFETY VALIDATION</div>
+            <p>Infrastructure mutations are locked until the deterministic safety engine completes verification.</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   const isSuccess = status === 'successful';
   const isFailed = status === 'failed';

@@ -1,6 +1,6 @@
 import React from 'react';
 
-function SafetyValidation({ safetyData }) {
+function SafetyValidation({ safetyData, simStage = 'completed' }) {
   if (!safetyData) return null;
 
   const {
@@ -14,6 +14,34 @@ function SafetyValidation({ safetyData }) {
   } = safetyData;
 
   const isSafe = verdict_status === 'pass';
+  const isAwaiting = simStage === 'idle' || simStage === 'investigating';
+
+  if (isAwaiting) {
+    return (
+      <section className="safety-validation-section standby-mode">
+        <div className="section-header">
+          <div>
+            <div className="panel-eyebrow">DETERMINISTIC GUARDRAILS</div>
+            <h2 className="section-title">Safety Engine Validation</h2>
+          </div>
+          <div className="safety-meta-tags">
+            <span className="mono-pill">Engine: ARMED</span>
+            <span className="mono-pill highlight">Target: {target_service_id}</span>
+          </div>
+        </div>
+
+        <div className="standby-placeholder-box">
+          <div className="standby-pulse-ring">🛡️</div>
+          <div className="standby-text-wrap">
+            <div className="standby-title">DETERMINISTIC SAFETY ENGINE ON STANDBY</div>
+            <p className="standby-desc">
+              Awaiting candidate action from autonomous investigation loop. Will enforce minimum capacity, SLA latency ceilings, and freshness constraints before authorization.
+            </p>
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className="safety-validation-section">

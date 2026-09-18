@@ -907,6 +907,117 @@ const MOCK_COST_IMPACTS = {
   }
 };
 
+
+const MOCK_SIMULATION_EVENTS = {
+  'cost-optimization': [
+    { id: 'ev-1', stage: 'investigating', stepIndex: 0, time: '14:32:01', icon: 'ℹ️', type: 'info', text: 'FinOps anomaly detection triggered for reports-worker ($0.96/hr)' },
+    { id: 'ev-2', stage: 'investigating', stepIndex: 1, time: '14:32:04', icon: '🔍', type: 'telemetry', text: 'Telemetry collected: CPU 12%, Mem 28%, RPS 3.2 (low sustained load)' },
+    { id: 'ev-3', stage: 'investigating', stepIndex: 2, time: '14:32:07', icon: '⏱️', type: 'freshness', text: 'Cache freshness verified: age 12s (< 15m TTL), zero scheduled jobs' },
+    { id: 'ev-4', stage: 'investigating', stepIndex: 3, time: '14:32:10', icon: '📊', type: 'analysis', text: 'Capacity evaluation confirms 3 excess instances provisioned' },
+    { id: 'ev-5', stage: 'investigating', stepIndex: 4, time: '14:32:14', icon: '🎯', type: 'decision', text: 'Candidate action formulated: scale_down reports-worker (4 -> 1)' },
+    { id: 'ev-6', stage: 'safety_checking', time: '14:32:18', icon: '🛡️', type: 'safety', text: 'Deterministic safety engine: ALL 6 CHECKS PASSED (POL-FINOPS-DOWN-01)' },
+    { id: 'ev-7', stage: 'action_dispatch', time: '14:32:22', icon: '⚙️', type: 'dispatch', text: 'Dispatching infrastructure action: scale_down 4 -> 1 instances' },
+    { id: 'ev-8', stage: 'verifying', time: '14:32:28', icon: '✅', type: 'verification', text: 'Post-action audit: VERIFIED. 1 instance running, healthy response' },
+    { id: 'ev-9', stage: 'completed', time: '14:32:30', icon: '💰', type: 'roi', text: 'Autonomous cycle complete. Verified savings: +$525.60/month confirmed' }
+  ],
+
+  'rising-traffic': [
+    { id: 'ev-1', stage: 'investigating', stepIndex: 0, time: '14:35:10', icon: 'ℹ️', type: 'info', text: 'Periodic cost auditor flagged api-gateway as top spender ($1.80/hr)' },
+    { id: 'ev-2', stage: 'investigating', stepIndex: 1, time: '14:35:13', icon: '⚠️', type: 'alert', text: 'Ingress traffic surge detected: +45% (1420.5 req/sec), CPU at 74%' },
+    { id: 'ev-3', stage: 'investigating', stepIndex: 2, time: '14:35:17', icon: '⏱️', type: 'sla', text: 'SLA margin warning: p95 latency at 38ms (approaching 40ms ceiling)' },
+    { id: 'ev-4', stage: 'investigating', stepIndex: 3, time: '14:35:21', icon: '🛑', type: 'veto', text: 'Agent reasoning engine explicitly VETOED cost reduction downscale' },
+    { id: 'ev-5', stage: 'investigating', stepIndex: 4, time: '14:35:25', icon: '🎯', type: 'decision', text: 'Decision ready: preserve capacity (6 instances), arm scale-up buffer' },
+    { id: 'ev-6', stage: 'safety_checking', time: '14:35:23', icon: '🛡️', type: 'safety', text: 'Safety Policy POL-CAPACITY-PROTECT-04: BLOCKED cost reduction' },
+    { id: 'ev-7', stage: 'action_dispatch', time: '14:35:26', icon: '🔒', type: 'protect', text: 'Action Intercepted: Capacity preserved. Zero instances removed' },
+    { id: 'ev-8', stage: 'verifying', time: '14:35:30', icon: '✅', type: 'verification', text: 'Audit confirmed: full 6-instance capacity active, latency protected' },
+    { id: 'ev-9', stage: 'completed', time: '14:35:32', icon: '🛡️', type: 'roi', text: 'Autonomous cycle complete. Reliability preserved over premature cost-cut' }
+  ],
+
+  'stale-observation': [
+    { id: 'ev-1', stage: 'investigating', stepIndex: 0, time: '14:40:02', icon: 'ℹ️', type: 'info', text: 'Scheduled optimizer reading cached snapshot of reports-worker' },
+    { id: 'ev-2', stage: 'investigating', stepIndex: 1, time: '14:40:05', icon: '⚠️', type: 'stale', text: 'Freshness Guard: Cache age 32m 05s exceeds 15m maximum TTL' },
+    { id: 'ev-3', stage: 'investigating', stepIndex: 2, time: '14:40:08', icon: '🛑', type: 'veto', text: 'Stale telemetry REJECTED. Prohibiting mutations on expired cache' },
+    { id: 'ev-4', stage: 'investigating', stepIndex: 3, time: '14:40:12', icon: '🔄', type: 'probe', text: 'Live hypervisor probe reveals 24 queued batch jobs, live CPU at 68%' },
+    { id: 'ev-5', stage: 'investigating', stepIndex: 4, time: '14:40:16', icon: '🎯', type: 'decision', text: 'Updated Decision: Abort downscale. Retain all 4 instances for backlog' },
+    { id: 'ev-6', stage: 'safety_checking', time: '14:40:07', icon: '🛡️', type: 'safety', text: 'Safety Guard: BLOCKED by freshness policy. Downscale cancelled' },
+    { id: 'ev-7', stage: 'action_dispatch', time: '14:40:18', icon: '🔒', type: 'protect', text: 'Action Aborted: Zero state mutation sent to cloud simulator' },
+    { id: 'ev-8', stage: 'verifying', time: '14:40:22', icon: '✅', type: 'verification', text: 'Verification confirms batch processing active on all 4 instances' },
+    { id: 'ev-9', stage: 'completed', time: '14:40:24', icon: '🎯', type: 'roi', text: 'Stale action successfully prevented. Critical quarter-end batch preserved' }
+  ],
+
+  'failed-action': [
+    { id: 'ev-1', stage: 'investigating', stepIndex: 0, time: '14:44:01', icon: 'ℹ️', type: 'info', text: 'Analytics ingestion memory alert: data-pipeline at 83% watermark' },
+    { id: 'ev-2', stage: 'investigating', stepIndex: 1, time: '14:44:05', icon: '⚙️', type: 'proposal', text: 'Proposing scale-up from 3 to 4 instances to alleviate memory buffer' },
+    { id: 'ev-3', stage: 'safety_checking', time: '14:44:08', icon: '🛡️', type: 'safety', text: 'Safety Engine verified bounds [2 - 8]. Authorization: GRANTED' },
+    { id: 'ev-4', stage: 'action_dispatch', time: '14:44:12', icon: '❌', type: 'error', text: 'Provider Error: 503 InsufficientInstanceCapacity in AZ sim-east-1a' },
+    { id: 'ev-5', stage: 'verifying', time: '14:44:16', icon: '🔍', type: 'audit', text: 'Post-failure audit: checking hypervisor for partial or orphan states' },
+    { id: 'ev-6', stage: 'verifying', time: '14:44:18', icon: '✅', type: 'verification', text: 'Recovery Verified: Infrastructure intact at 3 instances, zero corruption' },
+    { id: 'ev-7', stage: 'completed', time: '14:44:20', icon: '📝', type: 'incident', text: 'Incident INC-8821 logged. Cluster safe; scheduled retry in AZ sim-east-1b' }
+  ]
+};
+
+const MOCK_EXECUTIVE_SUMMARIES = {
+  'cost-optimization': {
+    scenario_id: 'cost-optimization',
+    title: 'Scenario A: Autonomous Cost Optimization Complete',
+    badge_status: 'OPTIMIZATION_VERIFIED',
+    badge_label: 'VERIFIED SUCCESS',
+    target_service: 'reports-worker',
+    autonomous_turnaround_sec: 14,
+    human_time_saved_min: 45,
+    outcome: 'Safe scale-down from 4 to 1 instance successfully executed and verified.',
+    net_savings_monthly: 525.60,
+    net_savings_hourly: 0.72,
+    safety_summary: '6 of 6 deterministic invariant checks passed (Capacity, SLA, Health, Freshness).',
+    recommendation: 'Autonomous cycle resolved. Reports worker will continue monitoring under active SLA watch.'
+  },
+
+  'rising-traffic': {
+    scenario_id: 'rising-traffic',
+    title: 'Scenario B: Ingress Surge Capacity Protected',
+    badge_status: 'CAPACITY_PROTECTED',
+    badge_label: 'SAFEGUARD ACTIVE',
+    target_service: 'api-gateway',
+    autonomous_turnaround_sec: 11,
+    human_time_saved_min: 30,
+    outcome: 'Downscaling blocked by Traffic & Latency SLA safety guardrails. Capacity preserved.',
+    net_savings_monthly: 0.00,
+    net_savings_hourly: 0.00,
+    safety_summary: 'Prohibited cost cut: Latency p95 at 38ms (threshold 40ms) and traffic surging +45%.',
+    recommendation: 'Reliability preserved over cost reduction. Zero service degradation or SLA penalty.'
+  },
+
+  'stale-observation': {
+    scenario_id: 'stale-observation',
+    title: 'Scenario C: Stale Action Blocked & Fresh State Verified',
+    badge_status: 'STALE_MUTATION_PREVENTED',
+    badge_label: 'FRESHNESS ENFORCED',
+    target_service: 'reports-worker',
+    autonomous_turnaround_sec: 12,
+    human_time_saved_min: 40,
+    outcome: 'Stale 32m cache rejected. Live probe revealed 24 queued batch jobs; fleet preserved at 4 instances.',
+    net_savings_monthly: 0.00,
+    net_savings_hourly: 0.00,
+    safety_summary: 'Freshness TTL (15m) enforced before any destructive action could occur.',
+    recommendation: 'Disruptive worker termination avoided. Incoming quarter-end batch reporting completed without backlog.'
+  },
+
+  'failed-action': {
+    scenario_id: 'failed-action',
+    title: 'Scenario D: Cloud Provider Error Contained & State Verified',
+    badge_status: 'RECOVERY_VERIFIED',
+    badge_label: 'FAIL-SAFE ROLLBACK',
+    target_service: 'data-pipeline',
+    autonomous_turnaround_sec: 16,
+    human_time_saved_min: 60,
+    outcome: 'Hypervisor quota failure intercepted and contained. Infrastructure state verified uncorrupted.',
+    net_savings_monthly: 0.00,
+    net_savings_hourly: 0.00,
+    safety_summary: 'Zero partial mutations or orphan containers created in cloud simulator.',
+    recommendation: 'Incident INC-8821 logged with full diagnostic audit for DevOps follow-up.'
+  }
+};
+
 export const mockApi = {
   /**
    * Fetch aggregated cloud spend summary and health metrics
@@ -1031,6 +1142,21 @@ export const mockApi = {
   getCostImpact: (scenarioId) => {
     return MOCK_COST_IMPACTS[scenarioId] || MOCK_COST_IMPACTS['cost-optimization'];
   },
+
+  /**
+   * Fetch structured live simulation events for a scenario
+   */
+  getSimulationEvents: (scenarioId) => {
+    return MOCK_SIMULATION_EVENTS[scenarioId] || MOCK_SIMULATION_EVENTS['cost-optimization'];
+  },
+
+  /**
+   * Fetch executive summary for completed scenario
+   */
+  getExecutiveSummary: (scenarioId) => {
+    return MOCK_EXECUTIVE_SUMMARIES[scenarioId] || MOCK_EXECUTIVE_SUMMARIES['cost-optimization'];
+  },
 };
+
 
 
