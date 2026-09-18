@@ -26,7 +26,7 @@ import json
 from datetime import datetime, timezone, timedelta
 
 from agent.models import ActionType
-from agent.adapters import MockCloudAdapter
+from agent.adapters import HttpBackendAdapter
 from agent.agent import CloudCostOptimizationAgent
 from agent.llm import get_llm_provider, get_llm_diagnostics
 
@@ -74,7 +74,7 @@ def run_demo():
     print(f"  Real LLM Active     : {diag['is_real_llm']}")
     print("=" * 75)
 
-    adapter = MockCloudAdapter()
+    adapter = HttpBackendAdapter("http://localhost:8000")
     llm = get_llm_provider()
     agent = CloudCostOptimizationAgent(
         investigation_adapter=adapter,
