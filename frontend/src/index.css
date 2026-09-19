@@ -1661,6 +1661,12 @@ html, body {
   border-left: 4px solid var(--accent-rose);
 }
 
+.safety-verdict-banner.verdict-unknown {
+  background: linear-gradient(90deg, rgba(148, 163, 184, 0.12) 0%, rgba(15, 23, 42, 0.6) 100%);
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  border-left: 4px solid var(--text-secondary);
+}
+
 .verdict-status-box {
   display: flex;
   align-items: center;
@@ -1707,6 +1713,17 @@ html, body {
   color: var(--accent-rose);
 }
 
+.verdict-unknown .verdict-heading {
+  color: var(--text-secondary);
+}
+
+.verdict-unknown .verdict-icon {
+  background: rgba(148, 163, 184, 0.2);
+  color: var(--text-secondary);
+  border: 1px solid var(--text-secondary);
+  box-shadow: 0 0 10px rgba(148, 163, 184, 0.35);
+}
+
 .verdict-subtext {
   font-size: 12px;
   color: var(--text-secondary);
@@ -1731,6 +1748,12 @@ html, body {
   background: rgba(244, 63, 94, 0.15);
   color: var(--accent-rose);
   border: 1px solid rgba(244, 63, 94, 0.3);
+}
+
+.verdict-unknown .verdict-badge {
+  background: rgba(148, 163, 184, 0.15);
+  color: var(--text-secondary);
+  border: 1px solid rgba(148, 163, 184, 0.3);
 }
 
 /* Safety Checks 3-column Grid */
@@ -1771,6 +1794,10 @@ html, body {
   border-left: 3px solid var(--accent-rose);
 }
 
+.safety-check-card.check-unknown {
+  border-left: 3px solid var(--text-muted);
+}
+
 .check-card-header {
   display: flex;
   align-items: center;
@@ -1790,6 +1817,10 @@ html, body {
 
 .check-blocked .check-status-icon {
   color: var(--accent-rose);
+}
+
+.check-unknown .check-status-icon {
+  color: var(--text-muted);
 }
 
 .check-name {
@@ -1817,6 +1848,12 @@ html, body {
   background: rgba(244, 63, 94, 0.12);
   color: var(--accent-rose);
   border: 1px solid rgba(244, 63, 94, 0.25);
+}
+
+.badge-unknown {
+  background: rgba(148, 163, 184, 0.12);
+  color: var(--text-secondary);
+  border: 1px solid rgba(148, 163, 184, 0.25);
 }
 
 .check-detail-row {

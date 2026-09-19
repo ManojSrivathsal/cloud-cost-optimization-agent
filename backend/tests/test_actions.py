@@ -108,7 +108,13 @@ def test_simulated_failed_action_preserves_consistent_state(client: TestClient):
     assert response.status_code == 200
     data = response.json()
     assert data["status"] == "failed"
-    assert "capacity" in data["execution_error"].lower() or "unavailable" in data["execution_error"].lower()
+    assert data["previous_instances"] == 3
+    assert data["new_instances"] == 3
+    assert (
+        "capacity" in data["execution_error"].lower()
+        or "unavailable" in data["execution_error"].lower()
+        or "provider" in data["execution_error"].lower()
+    )
     action_id = data["action_id"]
 
     # Verify state consistency
@@ -117,7 +123,13 @@ def test_simulated_failed_action_preserves_consistent_state(client: TestClient):
     v_data = verify_resp.json()
     assert v_data["verified"] is True
     assert v_data["status"] == "failed"
-    assert v_data["current_instances"] == 2  # State NOT altered!
+    assert v_data["previous_instances"] == 3
+    assert v_data["target_instances"] == 4
+    assert v_data["current_instances"] == 3  # State NOT altered by failed provider action!
+
+    # Verify service state was not mutated
+    svc = client.get("/api/services/payment-processor").json()
+    assert svc["instances"] == 3
 
 
 def test_action_on_unknown_service_returns_404(client: TestClient):

@@ -2,6 +2,8 @@ import React from 'react';
 import ServiceCard from './ServiceCard';
 
 function ServiceOverview({ services, selectedServiceId, onSelectService }) {
+  const safeServices = Array.isArray(services) ? services : [];
+
   return (
     <section className="service-overview-section">
       <div className="section-header">
@@ -12,12 +14,12 @@ function ServiceOverview({ services, selectedServiceId, onSelectService }) {
           </p>
         </div>
         <div className="fleet-counter-tag">
-          {services.length} SERVICES MONITORED
+          {safeServices.length} SERVICES MONITORED
         </div>
       </div>
 
       <div className="services-grid">
-        {services.map((service) => (
+        {safeServices.map((service) => (
           <ServiceCard
             key={service.service_id}
             service={service}

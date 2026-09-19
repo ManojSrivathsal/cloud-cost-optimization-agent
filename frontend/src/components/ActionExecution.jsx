@@ -43,9 +43,13 @@ function ActionExecution({ actionData, simStage = 'completed' }) {
     );
   }
 
-  const isSuccess = status === 'successful';
+  const isSuccess = status === 'successful' || status === 'success';
   const isFailed = status === 'failed';
   const isRejected = status === 'rejected';
+
+  const safePrev = previous_instances != null ? previous_instances : '—';
+  const safeTarget = target_instances != null ? target_instances : '—';
+  const safeCurrent = current_instances != null ? current_instances : '—';
 
   const getLifecycleSteps = () => {
     return [
@@ -59,7 +63,7 @@ function ActionExecution({ actionData, simStage = 'completed' }) {
       },
       {
         key: 'result',
-        label: isSuccess ? 'ACTION SUCCESSFUL' : isFailed ? 'RECOVERY ACTIVE' : 'NO MUTATION',
+        label: isSuccess ? 'ACTION SUCCESSFUL' : isFailed ? 'RECOVERY ACTIVE' : isRejected ? 'MUTATION BLOCKED' : 'NO MUTATION',
         done: true,
         success: isSuccess,
         failed: isFailed || isRejected,
@@ -94,7 +98,7 @@ function ActionExecution({ actionData, simStage = 'completed' }) {
       <div className="instance-transition-box">
         <div className="transition-col">
           <span className="col-label">PREVIOUS</span>
-          <div className="col-val mono">{previous_instances} <span className="unit">inst</span></div>
+          <div className="col-val mono">{safePrev} <span className="unit">inst</span></div>
         </div>
 
         <div className="transition-arrow-wrap">
@@ -103,13 +107,13 @@ function ActionExecution({ actionData, simStage = 'completed' }) {
 
         <div className="transition-col">
           <span className="col-label">TARGET DESIRED</span>
-          <div className="col-val mono target">{target_instances} <span className="unit">inst</span></div>
+          <div className="col-val mono target">{safeTarget} <span className="unit">inst</span></div>
         </div>
 
         <div className="transition-col actual">
           <span className="col-label">ACTUAL RUNNING</span>
           <div className={`col-val mono ${isSuccess ? 'actual-success' : 'actual-unchanged'}`}>
-            {current_instances} <span className="unit">inst</span>
+            {safeCurrent} <span className="unit">inst</span>
           </div>
         </div>
       </div>

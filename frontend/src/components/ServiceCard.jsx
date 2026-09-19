@@ -19,6 +19,9 @@ function ServiceCard({ service, isSelected, onSelect }) {
   } = service;
 
   const isHealthy = health === 'healthy';
+  const safeCost = Number.isFinite(Number(cost_per_hour)) ? Number(cost_per_hour) : 0;
+  const safeHealth = health || 'unknown';
+  const safeStatus = status_label || (typeof safeHealth === 'string' ? safeHealth.toUpperCase() : 'UNKNOWN');
 
   return (
     <div
@@ -35,29 +38,29 @@ function ServiceCard({ service, isSelected, onSelect }) {
       <div className="service-card-header">
         <div className="service-identity">
           <div className="service-name-row">
-            <h3 className="service-name">{name}</h3>
+            <h3 className="service-name">{name || service_id}</h3>
             {isSelected && <span className="active-badge">SELECTED</span>}
           </div>
           <div className="service-meta-row">
             <span className="service-id-tag">{service_id}</span>
-            <span className="instance-type-tag">{instance_type}</span>
+            <span className="instance-type-tag">{instance_type || 'simulated'}</span>
           </div>
         </div>
 
         <div className="service-cost-badge">
-          <span className="cost-rate">${cost_per_hour.toFixed(2)}</span>
+          <span className="cost-rate">${safeCost.toFixed(2)}</span>
           <span className="cost-unit">/ hr</span>
         </div>
       </div>
 
       <div className="service-status-bar">
-        <div className={`status-indicator-pill ${health}`}>
+        <div className={`status-indicator-pill ${safeHealth}`}>
           <span className="status-ping"></span>
-          <span className="status-text">{status_label || health.toUpperCase()}</span>
+          <span className="status-text">{safeStatus}</span>
         </div>
         <div className="capacity-badge">
-          <span className="instances-val">{current_instances}</span> instances
-          <span className="capacity-limits">[{min_instances} - {max_instances}]</span>
+          <span className="instances-val">{current_instances ?? 0}</span> instances
+          <span className="capacity-limits">[{min_instances ?? 0} - {max_instances ?? 0}]</span>
         </div>
       </div>
 
@@ -90,10 +93,12 @@ function ServiceCard({ service, isSelected, onSelect }) {
         </div>
       </div>
 
-      {alerts && alerts.length > 0 && (
+      {Array.isArray(alerts) && alerts.length > 0 && (
         <div className="service-card-alert">
           <span className="alert-icon">⚠</span>
-          <span className="alert-text">{alerts[0]}</span>
+          <span className="alert-text">
+            {typeof alerts[0] === 'string' ? alerts[0] : (alerts[0]?.message || 'Alert active')}
+          </span>
         </div>
       )}
     </div>

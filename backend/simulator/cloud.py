@@ -427,7 +427,17 @@ class CloudSimulator:
         elif scenario == ScenarioName.SCENARIO_D:
             # Scenario D: Failed Action Simulation
             # payment-processor has simulated provider capacity failure
-            desc = "Scenario D (Failed Action): 'payment-processor' has simulated cloud provider failure enabled. Requests will fail execution safely while keeping state consistent."
+            desc = (
+                "Scenario D (Failed Action): 'payment-processor' has 3 instances with low load. "
+                "Scale-down from 3 to 2 is safe, but simulated cloud provider failure will trigger execution failure."
+            )
+            self.services["payment-processor"]["instances"] = 3
+            self.services["payment-processor"]["min_instances"] = 2
+            self.services["payment-processor"]["cpu_percent"] = 18.0
+            self.services["payment-processor"]["memory_percent"] = 28.0
+            self.services["payment-processor"]["request_rate"] = 35.0
+            self.services["payment-processor"]["latency_ms"] = 85.0
+            self.services["payment-processor"]["traffic_trend"] = TrafficTrend.STABLE
             self.services["payment-processor"]["failure_simulation_enabled"] = True
 
         return ScenarioSwitchResponse(

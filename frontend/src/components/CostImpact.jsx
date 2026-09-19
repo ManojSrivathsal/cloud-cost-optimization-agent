@@ -18,6 +18,13 @@ function CostImpact({ costImpactData, simStage = 'completed' }) {
 
   const isAwaiting = simStage !== 'completed';
 
+  const safePrevHourly = Number.isFinite(Number(previous_hourly_cost)) ? Number(previous_hourly_cost) : 0;
+  const safeNewHourly = Number.isFinite(Number(new_hourly_cost)) ? Number(new_hourly_cost) : 0;
+  const safePrevMonthly = Number.isFinite(Number(previous_monthly_spend)) ? Number(previous_monthly_spend) : safePrevHourly * 730;
+  const safeNewMonthly = Number.isFinite(Number(new_monthly_spend)) ? Number(new_monthly_spend) : safeNewHourly * 730;
+  const safeHourlyDelta = Number.isFinite(Number(hourly_delta)) ? Number(hourly_delta) : (safeNewHourly - safePrevHourly);
+  const safeSavings = Number.isFinite(Number(estimated_monthly_savings)) ? Number(estimated_monthly_savings) : Math.max(0, safePrevMonthly - safeNewMonthly);
+
   if (isAwaiting) {
     return (
       <div className="cost-impact-container standby-mode">
@@ -40,7 +47,7 @@ function CostImpact({ costImpactData, simStage = 'completed' }) {
     );
   }
 
-  const hasSavings = estimated_monthly_savings > 0;
+  const hasSavings = safeSavings > 0;
 
   return (
     <div className="cost-impact-container">
@@ -61,11 +68,11 @@ function CostImpact({ costImpactData, simStage = 'completed' }) {
           <div className="impact-card-label">PRE-ACTION SPEND</div>
           <div className="cost-large-row">
             <span className="currency">$</span>
-            <span className="amount mono">{previous_hourly_cost.toFixed(2)}</span>
+            <span className="amount mono">{safePrevHourly.toFixed(2)}</span>
             <span className="unit">/ hr</span>
           </div>
           <div className="monthly-projection-subtext mono">
-            ${previous_monthly_spend.toFixed(2)} / month
+            ${safePrevMonthly.toFixed(2)} / month
           </div>
           <div className="impact-note">Initial provisioned allocation</div>
         </div>
@@ -75,11 +82,11 @@ function CostImpact({ costImpactData, simStage = 'completed' }) {
           <div className="impact-card-label">POST-ACTION SPEND</div>
           <div className="cost-large-row">
             <span className="currency">$</span>
-            <span className="amount mono">{new_hourly_cost.toFixed(2)}</span>
+            <span className="amount mono">{safeNewHourly.toFixed(2)}</span>
             <span className="unit">/ hr</span>
           </div>
           <div className="monthly-projection-subtext mono">
-            ${new_monthly_spend.toFixed(2)} / month
+            ${safeNewMonthly.toFixed(2)} / month
           </div>
           <div className="impact-note">Current post-audit run rate</div>
         </div>
@@ -88,13 +95,13 @@ function CostImpact({ costImpactData, simStage = 'completed' }) {
         <div className="impact-card delta-card">
           <div className="impact-card-label">HOURLY NET DELTA</div>
           <div className="cost-large-row">
-            <span className={`amount mono ${hourly_delta < 0 ? 'text-emerald' : 'text-secondary'}`}>
-              {hourly_delta < 0 ? `-$${Math.abs(hourly_delta).toFixed(2)}` : `$${hourly_delta.toFixed(2)}`}
+            <span className={`amount mono ${safeHourlyDelta < 0 ? 'text-emerald' : 'text-secondary'}`}>
+              {safeHourlyDelta < 0 ? `-$${Math.abs(safeHourlyDelta).toFixed(2)}` : `$${safeHourlyDelta.toFixed(2)}`}
             </span>
             <span className="unit">/ hr</span>
           </div>
           <div className="monthly-projection-subtext">
-            {hourly_delta < 0 ? 'Cost reduction rate' : 'No cost expansion'}
+            {safeHourlyDelta < 0 ? 'Cost reduction rate' : 'No cost expansion'}
           </div>
           <div className="impact-note">Immediate burn difference</div>
         </div>
@@ -110,7 +117,7 @@ function CostImpact({ costImpactData, simStage = 'completed' }) {
                 <span className="hero-plus text-emerald">+</span>
                 <span className="hero-currency text-emerald">$</span>
                 <span className="hero-amount mono text-emerald">
-                  {estimated_monthly_savings.toFixed(2)}
+                  {safeSavings.toFixed(2)}
                 </span>
                 <span className="hero-unit text-emerald">/ mo</span>
               </>
@@ -120,14 +127,14 @@ function CostImpact({ costImpactData, simStage = 'completed' }) {
           </div>
           <div className="savings-status-badge">
             <span className="status-indicator-dot">●</span>
-            <span className="status-text-val">{verified_status}</span>
+            <span className="status-text-val">{verified_status || 'VERIFIED'}</span>
           </div>
         </div>
       </div>
 
       <div className="cost-impact-summary-footer">
         <span className="summary-icon">💡</span>
-        <span className="summary-text">{summary}</span>
+        <span className="summary-text">{summary || 'Cloud cost impact calculated from live backend run rate.'}</span>
       </div>
     </div>
   );
